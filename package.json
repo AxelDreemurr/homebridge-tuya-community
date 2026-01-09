@@ -1,12 +1,14 @@
 {
-  "name": "homebridge-tuya",
-
-  "version": "3.1.1",
-
-  "description": "🏠 Offical Homebridge plugin for TuyAPI ",
+  "name": "homebridge-tuya-community",
+  "version": "3.2.0",
+  "description": "A Homebridge plugin to control Tuya devices locally. Community maintained version of homebridge-tuya that supports new device types.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
   },
   "bin": {
     "tuya-lan": "./bin/cli.js",
@@ -15,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iRayanKhan/homebridge-tuya.git"
+    "url": "git+https://github.com/axeldreemurr/homebridge-tuya-community.git"
   },
-  "author": "Rayan Khan",
+  "author": "AxelDreemurr",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iRayanKhan/homebridge-tuya/issues"
+    "url": "https://github.com/axeldreemurr/homebridge-tuya-community/issues"
   },
-  "homepage": "https://github.com/iRayanKhan/homebridge-tuya#readme",
+  "homepage": "https://github.com/axeldreemurr/homebridge-tuya-community#readme",
   "dependencies": {
     "async": "^3.2.2",
     "commander": "^3.0.1",
@@ -36,10 +38,12 @@
     "homebridge-plugin",
     "homebridge",
     "homebridge-tuya",
-    "tuya"
+    "tuya",
+    "tuya-community",
+    "tuya-lan"
   ],
   "engines": {
-    "homebridge": ">=0.4.0",
-    "node": ">=8.6.0"
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0",
+    "node": "^18.20.4 || ^20.15.1 || ^22"
   }
 }
