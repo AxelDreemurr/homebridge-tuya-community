@@ -5,14 +5,14 @@
 
 <span align="center">
 
-# Homebridge-Tuya
+# Homebridge-Tuya-Community
 
 
 </span>
 
 
 
-Control your supported Tuya accessories locally in HomeKit
+Control your supported Tuya accessories locally in HomeKit!
 
 * [Supported Device Types](#supported-device-types)
 * [Installation Instructions](#installation-instructions)
@@ -46,7 +46,7 @@ Control your supported Tuya accessories locally in HomeKit
 * Outlets<sup>[14](https://github.com/iRayanKhan/homebridge-tuya/wiki/Supported-Device-Types#outlets)</sup>
 * Switches<sup>[15](https://github.com/iRayanKhan/homebridge-tuya/wiki/Supported-Device-Types)</sup>
 
-Note: Motion, and other sensor types don't behave well with responce requests, so they will not be added. 
+Note: Motion sensors and others don't behave well with response requests, so they will not be supported.
 
 
 ## Installation Instructions
