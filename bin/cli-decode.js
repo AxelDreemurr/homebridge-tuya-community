@@ -54,7 +54,7 @@ const decodeLine = (key, input, log = true) => {
     const preHash = buffer.slice(0, len - 8);
     if (log) {
         console.log(`Cmd > ${cmd}  \tLen > ${len}\tSize > ${size}\tSeq > ${seq}`);
-        console.log(`CRC > \t${crcIn === getCRC32(preHash) ? `Pass` : `Fail ${crcIn} ≠ ${getCRC32(preHash)}`}`);
+        console.log(`CRC > \t${crcIn === getCRC32(preHash) ? 'Pass' : `Fail ${crcIn} ≠ ${getCRC32(preHash)}`}`);
     }
     const flag = buffer.readUInt32BE(16) & 0xFFFFFF00;
     buffer = buffer.slice(len - size + (flag ? 0 : 4), len - 8);

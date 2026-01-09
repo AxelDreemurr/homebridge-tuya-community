@@ -50,7 +50,7 @@ if (localIPs.length > 1) {
 }
 const localIPPorts = localIPs.map(ip => `${ip}:${program.port}`);
 
-const escapeUnicode = str => str.replace(/[\u00A0-\uffff]/gu, c => "\\u" + ("000" + c.charCodeAt().toString(16)).slice(-4));
+const escapeUnicode = str => str.replace(/[\u00A0-\uffff]/gu, c => '\\u' + ('000' + c.charCodeAt().toString(16)).slice(-4));
 
 proxy.onError(function(ctx, err) {
     switch (err.code) {
@@ -149,7 +149,7 @@ emitter.on('tuya-config', body => {
             id: device.devId,
             key: device.localKey,
             pid: device.productId
-        }
+        };
     });
 
     if (program.schema) {
@@ -203,5 +203,5 @@ proxy.listen({port: program.port, sslCaDir: ROOT}, err => {
         console.log('\nFollow the instructions on https://github.com/AMoo-Miki/homebridge-tuya-lan/wiki/Setup-Instructions');
         console.log(`Proxy IP: ${address}`);
         console.log(`Proxy Port: ${port}\n\n`);
-    })
+    });
 });

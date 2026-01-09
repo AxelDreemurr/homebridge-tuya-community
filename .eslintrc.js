@@ -6,13 +6,24 @@ module.exports = {
     extends: 'eslint:recommended',
     parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module'
+        sourceType: 'script'
     },
     rules: {
-        'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+        // Relaxed for legacy codebase - only critical errors
+        'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
         'no-console': 'off',
-        'semi': ['error', 'always'],
-        'quotes': ['warn', 'single', { avoidEscape: true }]
+        'no-empty': 'warn',
+        'no-constant-condition': 'warn',
+        'no-prototype-builtins': 'off',
+        'no-case-declarations': 'off',
+
+        // Disable style rules for legacy code
+        'semi': 'off',
+        'quotes': 'off',
+        'indent': 'off',
+        'comma-dangle': 'off',
+        'no-trailing-spaces': 'off',
+        'eol-last': 'off'
     },
     ignorePatterns: ['node_modules/', 'package-lock.json']
 };

@@ -70,7 +70,7 @@ class TuyaLan {
         this.api.hap.EnergyCharacteristics = require('./lib/EnergyCharacteristics')(EnergyChar, Formats, Perms);
 
         if (!this.config || !this.config.devices) {
-            this.log("No devices found. Check that you have specified them in your config.json file.");
+            this.log('No devices found. Check that you have specified them in your config.json file.');
             return false;
         }
 
@@ -201,7 +201,7 @@ class TuyaLan {
             isCached = true;
 
         if (accessory && accessory.category !== Accessory.getCategory(Categories)) {
-            this.log.info("%s has a different type (%s vs %s)", accessory.displayName, accessory.category, Accessory.getCategory(Categories));
+            this.log.info('%s has a different type (%s vs %s)', accessory.displayName, accessory.category, Accessory.getCategory(Categories));
             this.removeAccessory(accessory);
             accessory = null;
         }
@@ -209,8 +209,8 @@ class TuyaLan {
         if (!accessory) {
             accessory = new PlatformAccessory(deviceConfig.name, deviceConfig.UUID, Accessory.getCategory(Categories));
             accessory.getService(Service.AccessoryInformation)
-                .setCharacteristic(Characteristic.Manufacturer, deviceConfig.manufacturer || "Unknown")
-                .setCharacteristic(Characteristic.Model, deviceConfig.model || "Unknown")
+                .setCharacteristic(Characteristic.Manufacturer, deviceConfig.manufacturer || 'Unknown')
+                .setCharacteristic(Characteristic.Model, deviceConfig.model || 'Unknown')
                 .setCharacteristic(Characteristic.SerialNumber, deviceConfig.id.slice(8));
 
             isCached = false;
@@ -218,7 +218,7 @@ class TuyaLan {
 
         if (accessory && accessory.displayName !== deviceConfig.name) {
             this.log.info(
-                "Configuration name %s differs from cached displayName %s. Updating cached displayName to %s ",
+                'Configuration name %s differs from cached displayName %s. Updating cached displayName to %s ',
                 deviceConfig.name, accessory.displayName, deviceConfig.name);
             accessory.displayName = deviceConfig.name;
         }
