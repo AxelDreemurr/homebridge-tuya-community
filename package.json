@@ -1,6 +1,6 @@
 {
   "name": "homebridge-tuya-community",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "A Homebridge plugin to control Tuya devices locally. Community maintained version of homebridge-tuya that supports new device types.",
   "main": "index.js",
   "scripts": {

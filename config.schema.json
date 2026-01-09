@@ -28,7 +28,7 @@
                     "title": "Smart Plug / Barely Smart Power Strip",
                     "enum": [
                       "Outlet"
-                      ]
+                    ]
                   },
                   {
                     "title": "Simple Light Bulb / Socket",
@@ -58,6 +58,18 @@
                     "title": "Non-sequential Power Strip",
                     "enum": [
                       "CustomMultiOutlet"
+                    ]
+                  },
+                  {
+                    "title": "Light Switch",
+                    "enum": [
+                      "MultiLight"
+                    ]
+                  },
+                  {
+                    "title": "Non-sequential Light Switch",
+                    "enum": [
+                      "CustomMultiLight"
                     ]
                   },
                   {
@@ -303,6 +315,31 @@
                 },
                 "condition": {
                   "functionBody": "return model.devices && model.devices[arrayIndices] && ['CustomMultiOutlet'].includes(model.devices[arrayIndices].type);"
+                }
+              },
+              "lightCount": {
+                "type": "integer",
+                "placeholder": "3",
+                "condition": {
+                  "functionBody": "return model.devices && model.devices[arrayIndices] && ['MultiLight'].includes(model.devices[arrayIndices].type);"
+                }
+              },
+              "lights": {
+                "type": "array",
+                "orderable": false,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "dp": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "condition": {
+                  "functionBody": "return model.devices && model.devices[arrayIndices] && ['CustomMultiLight'].includes(model.devices[arrayIndices].type);"
                 }
               },
               "noCool": {

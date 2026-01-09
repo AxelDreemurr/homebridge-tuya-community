@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. This project uses [semantic versioning](https://semver.org/).
 
+## 3.3.0 (2026-01-09)
+
+### Added
+- **Light Switch support** - Multi-gang light switches with separate HomeKit accessories per gang
+  - `MultiLight` type for sequential DPs (1, 2, 3...)
+  - `CustomMultiLight` type for custom DP mappings with per-gang naming
+- **v3.5 protocol support** - Added GCM decryption for newer Tuya devices
+
+### Fixed
+- Fixed decryption issue in TuyaDiscovery (utf8 → binary encoding)
+- Fixed multiple connection attempts when using multi-gang accessories
+
+
+## 3.2.0 (2026-01-09)
+
+### 🎉 New Maintainer
+This plugin is now **homebridge-tuya-community**, a community-maintained fork of the original [homebridge-tuya](https://github.com/iRayanKhan/homebridge-tuya) by [@iRayanKhan](https://github.com/iRayanKhan).
+
+Now maintained by [@AxelDreemurr](https://github.com/AxelDreemurr).
+
+### Added
+- **Homebridge v2.0 support** - Full compatibility with Homebridge 2.0
+
+
 ## 2.0.1 (2021-03-25)
 This update includes the following changes:
 

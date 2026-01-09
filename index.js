@@ -5,6 +5,8 @@ const OutletAccessory = require('./lib/OutletAccessory');
 const SimpleLightAccessory = require('./lib/SimpleLightAccessory');
 const MultiOutletAccessory = require('./lib/MultiOutletAccessory');
 const CustomMultiOutletAccessory = require('./lib/CustomMultiOutletAccessory');
+const MultiLightAccessory = require('./lib/MultiLightAccessory');
+const CustomMultiLightAccessory = require('./lib/CustomMultiLightAccessory');
 const RGBTWLightAccessory = require('./lib/RGBTWLightAccessory');
 const RGBTWOutletAccessory = require('./lib/RGBTWOutletAccessory');
 const TWLightAccessory = require('./lib/TWLightAccessory');
@@ -34,6 +36,8 @@ const CLASS_DEF = {
     twlight: TWLightAccessory,
     multioutlet: MultiOutletAccessory,
     custommultioutlet: CustomMultiOutletAccessory,
+    multilight: MultiLightAccessory,
+    custommultilight: CustomMultiLightAccessory,
     airconditioner: AirConditionerAccessory,
     airpurifier: AirPurifierAccessory,
     dehumidifier: DehumidifierAccessory,
@@ -50,12 +54,12 @@ const CLASS_DEF = {
     oildiffuser: OilDiffuserAccessory
 };
 
-let Characteristic, PlatformAccessory, Service, Categories, AdaptiveLightingController, UUID;
+let Characteristic, PlatformAccessory, Service, Categories, AdaptiveLightingController, UUID, Perms;
 
 module.exports = function (homebridge) {
     ({
         platformAccessory: PlatformAccessory,
-        hap: { Characteristic, Service, AdaptiveLightingController, Accessory: { Categories }, uuid: UUID }
+        hap: { Characteristic, Service, AdaptiveLightingController, Accessory: { Categories }, uuid: UUID, Perms }
     } = homebridge);
 
     homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, TuyaLan, true);
@@ -64,6 +68,8 @@ module.exports = function (homebridge) {
 class TuyaLan {
     constructor(...props) {
         [this.log, this.config, this.api] = [...props];
+
+        this.PlatformAccessory = PlatformAccessory;
 
         this.cachedAccessories = new Map();
         const { Characteristic: EnergyChar, Formats, Perms } = this.api.hap;
@@ -74,7 +80,26 @@ class TuyaLan {
             return false;
         }
 
-        this._expectedUUIDs = this.config.devices.map(device => UUID.generate(PLUGIN_NAME + (device.fake ? ':fake:' : ':') + device.id));
+        this._expectedUUIDs = [];
+        this.config.devices.forEach(device => {
+            const baseUUID = UUID.generate(PLUGIN_NAME + (device.fake ? ':fake:' : ':') + device.id);
+            this._expectedUUIDs.push(baseUUID);
+
+            // Add child UUIDs for multilight and custommultilight devices
+            const type = ('' + (device.type || '')).trim().toLowerCase();
+            if (type === 'multilight') {
+                const lightCount = parseInt(device.lightCount) || 1;
+                for (let i = 1; i <= lightCount; i++) {
+                    this._expectedUUIDs.push(UUID.generate(baseUUID + ':light:' + i));
+                }
+            } else if (type === 'custommultilight' && Array.isArray(device.lights)) {
+                device.lights.forEach((light) => {
+                    if (light && isFinite(light.dp)) {
+                        this._expectedUUIDs.push(UUID.generate(baseUUID + ':light:' + light.dp));
+                    }
+                });
+            }
+        });
 
         this.api.on('didFinishLaunching', () => {
             this.discoverDevices();
@@ -170,7 +195,7 @@ class TuyaLan {
                     if (!characteristic.props ||
                         !Array.isArray(characteristic.props.perms) ||
                         characteristic.props.perms.length !== 3 ||
-                        !(characteristic.props.perms.includes(this.api.hap.Perms.WRITE) && characteristic.props.perms.includes(this.api.hap.Perms.NOTIFY))
+                        !(characteristic.props.perms.includes(Perms.WRITE) && characteristic.props.perms.includes(Perms.NOTIFY))
                     ) return;
 
                     this.log.info('Marked %s unreachable by faulting Service.%s.%s', accessory.displayName, service.displayName, characteristic.displayName);
@@ -231,8 +256,30 @@ class TuyaLan {
 
         this.log.warn('Unregistering', homebridgeAccessory.displayName);
 
-        delete this.cachedAccessories[homebridgeAccessory.UUID];
-        this.api.unregisterPlatformAccessories(PLATFORM_NAME, PLATFORM_NAME, [homebridgeAccessory]);
+        // Also remove any child accessories (for MultiLight/CustomMultiLight)
+        const baseUUID = homebridgeAccessory.UUID;
+        const childAccessoriesToRemove = [];
+
+        // Find and collect child accessories
+        this.cachedAccessories.forEach((accessory, uuid) => {
+            if (uuid !== baseUUID && uuid.startsWith(baseUUID + ':light:')) {
+                childAccessoriesToRemove.push({ uuid, accessory });
+            }
+        });
+
+        // Remove child accessories
+        childAccessoriesToRemove.forEach(({ uuid, accessory }) => {
+            this.log.warn('Unregistering child accessory', accessory.accessory ? accessory.accessory.displayName : uuid);
+            this.cachedAccessories.delete(uuid);
+            // Extract the actual PlatformAccessory if wrapped
+            const platformAccessory = accessory.accessory || accessory;
+            if (platformAccessory && typeof platformAccessory.getService === 'function') {
+                this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [platformAccessory]);
+            }
+        });
+
+        this.cachedAccessories.delete(homebridgeAccessory.UUID);
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homebridgeAccessory]);
     }
 
     removeAccessoryByUUID(uuid) {
