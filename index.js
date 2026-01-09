@@ -54,12 +54,12 @@ const CLASS_DEF = {
     oildiffuser: OilDiffuserAccessory
 };
 
-let Characteristic, PlatformAccessory, Service, Categories, AdaptiveLightingController, UUID, Perms;
+let Characteristic, PlatformAccessory, Service, Categories, _AdaptiveLightingController, UUID, Perms;
 
 module.exports = function (homebridge) {
     ({
         platformAccessory: PlatformAccessory,
-        hap: { Characteristic, Service, AdaptiveLightingController, Accessory: { Categories }, uuid: UUID, Perms }
+        hap: { Characteristic, Service, AdaptiveLightingController: _AdaptiveLightingController, Accessory: { Categories }, uuid: UUID, Perms }
     } = homebridge);
 
     homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, TuyaLan, true);
@@ -117,7 +117,7 @@ class TuyaLan {
                 device.type = ('' + device.type).trim();
 
                 device.ip = ('' + (device.ip || '')).trim();
-            } catch (ex) { }
+            } catch (ex) { /* Intentionally empty */ }
 
             if (!device.type) return this.log.error('%s (%s) doesn\'t have a type defined.', device.name || 'Unnamed device', device.id);
             if (!CLASS_DEF[device.type.toLowerCase()]) return this.log.error('%s (%s) doesn\'t have a valid type defined.', device.name || 'Unnamed device', device.id);

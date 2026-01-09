@@ -12,7 +12,7 @@ const fs = require('fs-extra');
 // Disable debug messages from the proxy
 try {
     require('debug').disable();
-} catch(ex) {}
+} catch (ex) { /* Intentionally empty */ }
 
 const ROOT = path.resolve(__dirname);
 
@@ -52,7 +52,7 @@ const localIPPorts = localIPs.map(ip => `${ip}:${program.port}`);
 
 const escapeUnicode = str => str.replace(/[\u00A0-\uffff]/gu, c => '\\u' + ('000' + c.charCodeAt().toString(16)).slice(-4));
 
-proxy.onError(function(ctx, err) {
+proxy.onError(function (ctx, err) {
     switch (err.code) {
         case 'ERR_STREAM_DESTROYED':
         case 'ECONNRESET':
@@ -71,7 +71,7 @@ proxy.onError(function(ctx, err) {
     }
 });
 
-proxy.onRequest(function(ctx, callback) {
+proxy.onRequest(function (ctx, callback) {
     if (ctx.clientToProxyRequest.method === 'GET' && ctx.clientToProxyRequest.url === '/cert' && localIPPorts.includes(ctx.clientToProxyRequest.headers.host)) {
         ctx.use(Proxy.gunzip);
         console.log('Intercepted certificate request');
@@ -94,19 +94,19 @@ proxy.onRequest(function(ctx, callback) {
     } else if (ctx.clientToProxyRequest.method === 'POST' && /tuya/.test(ctx.clientToProxyRequest.headers.host)) {
         ctx.use(Proxy.gunzip);
 
-        ctx.onRequestData(function(ctx, chunk, callback) {
+        ctx.onRequestData(function (ctx, chunk, callback) {
             return callback(null, chunk);
         });
-        ctx.onRequestEnd(function(ctx, callback) {
+        ctx.onRequestEnd(function (ctx, callback) {
             callback();
         });
 
         let chunks = [];
-        ctx.onResponseData(function(ctx, chunk, callback) {
+        ctx.onResponseData(function (ctx, chunk, callback) {
             chunks.push(chunk);
             return callback(null, chunk);
         });
-        ctx.onResponseEnd(function(ctx, callback) {
+        ctx.onResponseEnd(function (ctx, callback) {
             emitter.emit('tuya-config', Buffer.concat(chunks).toString());
             callback();
         });
@@ -188,17 +188,17 @@ emitter.on('tuya-config', body => {
     }, 5000);
 });
 
-proxy.listen({port: program.port, sslCaDir: ROOT}, err => {
+proxy.listen({ port: program.port, sslCaDir: ROOT }, err => {
     if (err) {
         console.error('Error starting proxy: ' + err);
         return setTimeout(() => {
             process.exit(0);
         }, 5000);
     }
-    let {address, port} = proxy.httpServer.address();
+    let { address, port } = proxy.httpServer.address();
     if (address === '::' || address === '0.0.0.0') address = localIPs[0];
 
-    QRCode.toString(`http://${address}:${port}/cert`, {type: 'terminal'}, function(err, url) {
+    QRCode.toString(`http://${address}:${port}/cert`, { type: 'terminal' }, function (err, url) {
         console.log(url);
         console.log('\nFollow the instructions on https://github.com/AMoo-Miki/homebridge-tuya-lan/wiki/Setup-Instructions');
         console.log(`Proxy IP: ${address}`);
