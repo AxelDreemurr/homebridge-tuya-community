@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. This project uses [semantic versioning](https://semver.org/).
 
+## 3.3.2 (2026-01-10)
+
+### Added
+- **Custom Serial Number** - New `serialNumber` config option to set a custom serial number for devices in HomeKit
+- **Firmware Version** - New `firmwareVersion` config option to display a custom firmware version in HomeKit
+
+These options are available for all device types and will appear in the Home app's accessory details.
+
+
+## 3.3.1 (2026-01-09)
+
+### 🐛 Bug Fixes
+- **Fixed undefined variable `rl`** in cli-decode.js that would crash on invalid input.
+- **Fixed undefined variable `service`** in AirPurifierAccessory.js when `noChildLock` is enabled.
+- **Fixed undefined variable `characteristicRotationSpeed`** in DehumidifierAccessory.js (was referencing wrong variable name).
+- Removed unreachable code after return statements in SimpleFanAccessory.js and SimpleFanLightAccessory.js.
+
+### 🧹 Code Quality
+- Added ESLint compliance across entire codebase (52 issues resolved).
+- Improved code quality with explicit handling of intentionally empty catch blocks.
+
+
 ## 3.3.0 (2026-01-09)
 
 ### Added

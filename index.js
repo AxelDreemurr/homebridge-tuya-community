@@ -236,7 +236,8 @@ class TuyaLan {
             accessory.getService(Service.AccessoryInformation)
                 .setCharacteristic(Characteristic.Manufacturer, deviceConfig.manufacturer || 'Unknown')
                 .setCharacteristic(Characteristic.Model, deviceConfig.model || 'Unknown')
-                .setCharacteristic(Characteristic.SerialNumber, deviceConfig.id.slice(8));
+                .setCharacteristic(Characteristic.SerialNumber, deviceConfig.serialNumber || deviceConfig.id.slice(8))
+                .setCharacteristic(Characteristic.FirmwareRevision, deviceConfig.firmwareVersion || '1.0');
 
             isCached = false;
         }

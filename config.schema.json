@@ -181,6 +181,20 @@
                   "functionBody": "return model.devices && model.devices[arrayIndices].type !== 'null';"
                 }
               },
+              "serialNumber": {
+                "type": "string",
+                "description": "Custom serial number for this device. If not set, uses last 14 characters of the Tuya ID.",
+                "condition": {
+                  "functionBody": "return model.devices && model.devices[arrayIndices].type !== 'null';"
+                }
+              },
+              "firmwareVersion": {
+                "type": "string",
+                "description": "Firmware version to display in HomeKit for this device.",
+                "condition": {
+                  "functionBody": "return model.devices && model.devices[arrayIndices].type !== 'null';"
+                }
+              },
               "voltsId": {
                 "type": "integer",
                 "placeholder": "9",
