@@ -1,6 +1,6 @@
 {
   "name": "homebridge-tuya-community",
-  "version": "3.3.0",
+  "version": "3.3.2",
   "description": "A Homebridge plugin to control Tuya devices locally. Community maintained version of homebridge-tuya that supports new device types.",
   "main": "index.js",
   "scripts": {
@@ -44,6 +44,6 @@
   ],
   "engines": {
     "homebridge": "^1.6.0 || ^2.0.0-beta.0",
-    "node": "^18.20.4 || ^20.15.1 || ^22"
+    "node": "^18.20.4 || ^20.15.1 || ^22 || ^24"
   }
 }

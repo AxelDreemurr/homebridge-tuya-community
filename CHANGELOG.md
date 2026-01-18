@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project uses [semantic versioning](https://semver.org/).
 
+## 3.3.3 (2026-01-18)
+
+### Changed
+- **Node v24 Support** - Updated `engines` to support Node v24
+
 ## 3.3.2 (2026-01-10)
 
 ### Added
