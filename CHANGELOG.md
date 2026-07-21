@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project uses [semantic versioning](https://semver.org/).
 
+## 🎉 What's New in v3.3.4
+
+### 🐛 Bug Fixes
+
+- Fixed `MultiLight` accessories failing after discovery on Homebridge v2 by replacing the removed `Accessory.Categories` API with `api.hap.Categories`.
+
 ## 3.3.3 (2026-01-18)
 
 ### Changed
