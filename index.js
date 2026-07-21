@@ -25,7 +25,10 @@ const SwitchAccessory = require('./lib/SwitchAccessory');
 const ValveAccessory = require('./lib/ValveAccessory');
 const OilDiffuserAccessory = require('./lib/OilDiffuserAccessory');
 
-const PLUGIN_NAME = 'homebridge-tuya';
+const PLUGIN_NAME = 'homebridge-tuya-community';
+// Keep the historic UUID namespace so existing HomeKit accessories survive the
+// package rename. This is intentionally not the plugin identifier.
+const LEGACY_UUID_NAMESPACE = 'homebridge-tuya';
 const PLATFORM_NAME = 'TuyaLan';
 
 const CLASS_DEF = {
@@ -59,7 +62,7 @@ let Characteristic, PlatformAccessory, Service, Categories, _AdaptiveLightingCon
 module.exports = function (homebridge) {
     ({
         platformAccessory: PlatformAccessory,
-        hap: { Characteristic, Service, AdaptiveLightingController: _AdaptiveLightingController, Accessory: { Categories }, uuid: UUID, Perms }
+        hap: { Characteristic, Service, AdaptiveLightingController: _AdaptiveLightingController, Categories, uuid: UUID, Perms }
     } = homebridge);
 
     homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, TuyaLan, true);
@@ -82,7 +85,7 @@ class TuyaLan {
 
         this._expectedUUIDs = [];
         this.config.devices.forEach(device => {
-            const baseUUID = UUID.generate(PLUGIN_NAME + (device.fake ? ':fake:' : ':') + device.id);
+            const baseUUID = UUID.generate(LEGACY_UUID_NAMESPACE + (device.fake ? ':fake:' : ':') + device.id);
             this._expectedUUIDs.push(baseUUID);
 
             // Add child UUIDs for multilight and custommultilight devices
@@ -143,7 +146,7 @@ class TuyaLan {
                 const device = new TuyaAccessory({
                     ...devices[config.id], ...config,
                     log: this.log,
-                    UUID: UUID.generate(PLUGIN_NAME + ':' + config.id),
+                    UUID: UUID.generate(LEGACY_UUID_NAMESPACE + ':' + config.id),
                     connect: false
                 });
                 this.addAccessory(device);
@@ -154,7 +157,7 @@ class TuyaLan {
             this.addAccessory(new TuyaAccessory({
                 ...config,
                 log: this.log,
-                UUID: UUID.generate(PLUGIN_NAME + ':fake:' + config.id),
+                UUID: UUID.generate(LEGACY_UUID_NAMESPACE + ':fake:' + config.id),
                 connect: false
             }));
         });
@@ -170,7 +173,7 @@ class TuyaLan {
                     const device = new TuyaAccessory({
                         ...devices[deviceId],
                         log: this.log,
-                        UUID: UUID.generate(PLUGIN_NAME + ':' + deviceId),
+                        UUID: UUID.generate(LEGACY_UUID_NAMESPACE + ':' + deviceId),
                         connect: false
                     });
                     this.addAccessory(device);
